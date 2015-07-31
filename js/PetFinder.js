@@ -1,7 +1,7 @@
 angular.module('PetFinder', ['PetCache'])
 .factory('petfinder', ['$http', 'shelters', 'petcache', function ($http, shelters, petcache, constants) {
 
-  var constants = { test: false, url: 'http://githubio-dot-bfapps.appspot.com/pets' };
+  var constants = { test: false, url: 'https://api.petfinder.com/pet.find' };
 
   var utils = {
     getPetsCacheKey: function (location, animal) {
@@ -21,6 +21,7 @@ angular.module('PetFinder', ['PetCache'])
         return null;
 
       var params = {
+        key: '0586dcda72cab58cadbfd186ae98157c',
         count: 100,
         callback: 'JSON_CALLBACK',
         location: location,
@@ -59,7 +60,6 @@ angular.module('PetFinder', ['PetCache'])
         callback: 'JSON_CALLBACK',
         format: 'json'
       };
-      params[this.r.y()] = this.r.v();
       $http.jsonp(constants.url + 'shelter.get?', { 'params': params }).success(
         this.getShelterByIdCacheSuccessFunction.bind(this, shelterId, success)
       );
