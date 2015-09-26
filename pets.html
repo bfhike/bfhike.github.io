@@ -1,0 +1,165 @@
+        
+        <div class="container" data-ng-controller="PetController"> 
+
+          <h3>Search for adoptable pets by City, State or Zip Code (US/Canada)</h3>
+            <p class="text-warning" data-ng-cloak data-ng-model="message" 
+                data-ng-show="message != null">{{message}}</p>
+            <form data-ng-submit="findpets()" name="searchForm">
+              <div class="row form-horizontal form-group panel">
+                  <div class="col-sm-3">
+                      <input type="number" name="zipcode" data-ng-model="zipcode" pattern="\d{5}"
+                             title="Please enter a valid, 5-digit Zip code"
+                             required="required" placeholder="Enter a 5-digit Zip Code" class="form-control zipcode" />
+                  </div>
+                  <div class="col-sm-3">
+                      <select data-ng-model="animal" class="form-control" 
+                              ng-options="t.value as t.name for t in animalSelector">
+                      </select>
+                  </div>
+                  <div class="col-sm-1">
+                      <button id="findPetsButton" data-ng-submit="findpets()" class="btn btn-info"  
+                              title="Enter a 5-digit Zip Code and press" data-ng-disabled="searchForm.zipcode.$error.pattern">
+                        <span class="glyphicon glyphicon-search"><span data-role="spacer"> </span>Search</span>
+                        <img src="images/ajax-loader.gif" class="ng-hide" data-ng-show="showspinner"
+                                    alt="searching for pets"/>
+                      </button>
+                  </div>
+              </div>
+            </form>
+            <div class="panel" data-ng-cloak> 
+                <div class="row panel" data-ng-init="petIndex = $index"
+                     data-ng-repeat-start="pet in pets | filter: adoptableStatus | orderBy: '-lastUpdate.$t'" >
+                    <!-- column start --> 
+                    <div class="col-sm-5">
+                      <!-- pet image on each row - showing size=x -->
+                      <div data-ng-init="petImages.init(pet, petIndex, photo)" 
+                           data-ng-repeat="photo in pet.media.photos.photo | filter: {'@size':'x'} : true">
+                        <!-- show one image at a time, rotated by angular events -->
+                        <div data-ng-if="$index == 0" class="carousel">
+                          <img data-ng-src="{{petImages.current(petIndex)['$t']}}" data-ng-click="modal.show(pet, petIndex);"
+                               class="img-responsive img-rounded petimage" alt="{{pet.name.$t}}" />
+                        </div>
+                        <div data-ng-if="$index == 1">
+                          <span data-slide="prev" data-ng-click="petImages.prev(petIndex)"
+                            class="left carousel-control" role="button" >
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                          </span>
+                          <span data-slide="next" data-ng-click="petImages.next(petIndex)"
+                            class="right carousel-control" role="button">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>                      
+                    <!-- column end --> 
+                    <!-- column start --> 
+                    <div class="col-sm-3">
+                        <h4 title="{{pet.name.$t}}">{{pet.name.$t.substring(0,20);}}</h4> 
+                        <p><span>{{pet.age.$t}}</span>
+                           <span>{{pet.sex.$t | sexes}}</span>,
+                           <span>{{pet.size.$t | sizes }}</span>
+                           <span data-ng-repeat="breed in pet.breeds"><span>{{breed.$t}} </span></span>
+                           <span><span data-ng-repeat="option in pet.options.option">{{option.$t | options }} </span></span>
+                        </p>
+                        <div><a id="mailto{{pet.shelterId.$t}}{{petIndex}}" 
+                                href="mailto:{{pet.contact.email.$t}}" 
+                                data-toggle="tooltip" data-placement="top" target="_blank"
+                                title="{{pet.contact.email.$t}}">E-Mail</a> or 
+                             <a id="tel{{pet.shelterId.$t}}{{petIndex}}"
+                                href="tel:{{pet.contact.phone.$t}}" target="_blank"
+                                data-toggle="tooltip" data-placement="right" title="{{pet.contact.phone.$t}}">Call Now!</a>
+                        </div>
+                        <div>
+                          <!-- div>{{pet.shelterId.$t | shelters}}</div -->
+                          <h5>
+                            <div>{{pet.contact.address1.$t}}</div>
+                            <div>
+                              <span>{{pet.contact.city.$t}}, </span>
+                              <span>{{pet.contact.state.$t}} </span>
+                              <span>{{pet.contact.zip.$t}}</span>
+                            </div>
+                          </h5>
+                          <h6>
+                             <div>updated {{pet.lastUpdate.$t | date }}</div>
+                             <div>pet id {{pet.shelterPetId.$t}}</div>
+                             <div>
+                                <a id="mapit{{pet.shelterId.$t}}{{petIndex}}" target="_blank" 
+                                   href="http://www.google.com/maps/place/{{pet.contact.address1.$t}}+{{pet.contact.city.$t}}+{{pet.contact.state.$t}}+{{pet.contact.zip.$t}}">map it</a>
+                             </div>
+                           </h6>
+                        </div>
+                    </div>                     
+                    <!-- column end -->                   
+                    <!-- column start --> 
+                    <div class="col-sm-4" data-ng-click="modal.show(pet, petIndex);">
+                        <!-- if there is no description, the description filter will return nothing -->
+                        <!-- if there is no description, the morephotos filter will return an array of photos-->
+                        <p title="{{pet.description.$t}}">{{pet.description | description}}</p> 
+                        <div ng-if="!pet.description || !pet.description.$t">
+                          <img class="caption img-rounded" 
+                               data-ng-repeat="photo in pet.media.photos.photo | filter: {'@size':'fpm'} : true" 
+                               data-ng-click="modal.show(pet, petIndex);" data-ng-src="{{photo.$t}}" alt="{{pet.name.$t}}" /> 
+                        </div>
+                    </div>                     
+                    <!-- column end -->
+                   
+                </div>
+                <span data-ng-repeat-end>{{initTooltips()}}</span>
+
+                <!-- bootstrap modal window displayed by bootstrap/jquery, content by angular - 
+                     must be in the controller scope -->
+                <div id="modalWindow" class="modal">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div class="row">
+                          <div class="col-sm-4">
+                              <h4 class="modal-title">{{modal.pet(modal.petIndex).name.$t}}</h4></div>
+                          <div class="col-sm-4">
+                              <h4 class="modal-title">{{modal.pet(modal.petIndex).contact | address}}</h4></div>
+                          <div class="col-sm-3">
+                              <h4 class="modal-title">{{modal.pet(modal.petIndex).contact.phone.$t}}</h4></div>
+                          <div class="col-sm-1">
+                            <button type="button" class="close" data-ng-click="modal.hide()" 
+                                    data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-body carousel">
+                        <img id="modalImage" class="img-responsive img-rounded petimage" 
+                             data-ng-src="{{modal.current(modal.petIndex)['$t']}}" 
+                             data-ng-click="modal.next(modal.petIndex)" alt="no big image"/>
+                        <span data-ng-if="modal.hasMultiple(modal.petIndex)" data-slide="prev" 
+                              data-ng-click="modal.prev(modal.petIndex)" class="left carousel-control" role="button" >
+                          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </span>
+                        <span data-ng-if="modal.hasMultiple(modal.petIndex)" data-slide="next" 
+                              data-ng-click="modal.next(modal.petIndex)" class="right carousel-control" role="button">
+                          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </span>
+                      </div>
+                      <div class="modal-body">
+                         <pre class="description">{{modal.pet(modal.petIndex).description.$t}}</pre>
+                      </div>
+                    </div><!-- /.modal-content -->
+                  </div><!-- /.modal-dialog -->
+                </div><!-- /.modal -->
+
+            </div> 
+        </div>
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-53554428-1', 'auto');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>

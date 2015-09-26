@@ -1,5 +1,7 @@
 angular.module('PetFinder', ['PetCache'])
-.factory('petfinder', ['$http', 'shelters', 'petcache', function ($http, shelters, petcache, constants) {
+
+.factory('petfinder', ['$http', 'shelters', 'petcache', 
+function ($http, shelters, petcache) {
 
   var constants = { test: false, url: 'https://api.petfinder.com/pet.find' };
 

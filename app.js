@@ -1,4 +1,4 @@
-angular.module('petapp', ['HomeController','PetFilter','PetCache','PetFinder'])
+angular.module('bfAngApp', ['ngRoute','IndexController','PetController','PetFilter','PetCache','PetFinder','PetModel'])
 .config(['$compileProvider', function ($compileProvider) {
-  $compileProvider.debugInfoEnabled(false);
+  $compileProvider.debugInfoEnabled(true);
 }]);

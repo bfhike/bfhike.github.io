@@ -1,15 +1,12 @@
-angular.module('HomeController', ['PetFinder', 'ImageArray']).controller('Home',
-['$scope', '$filter', '$document', '$timeout', 'petfinder', 'imageArray',
-function ($scope, $filter, $document, $timeout, petfinder, ImageArray) {
+angular.module('PetController', ['ngRoute', 'PetFinder', 'ImageArray', 'PetModel'])
+.controller('PetController',
+['$scope', '$filter', '$document', '$timeout', '$route', '$routeParams', '$location', 'petfinder', 'imageArray', 'petmodel',
+function ($scope, $filter, $document, $timeout, $route, $routeParams, $location, petfinder, ImageArray, petmodel) {
 
-  // put it in the global scope for debugging
-  //HomeControllerClosureForDebugging = function () {};
-
-  /* auto-load for testing*/
-  $document.ready(function () {
-    $scope.initTooltips();
-    $('.zipcode').focus();
-  });
+  $scope.name = "PetController";
+  $scope.$route = $route;
+  $scope.$location = $location;
+  $scope.$routeParams = $routeParams;
 
   $scope.message = null;
   $scope.hasMessage = $scope.message != null && $scope.message.length > 0;
@@ -36,15 +33,8 @@ function ($scope, $filter, $document, $timeout, petfinder, ImageArray) {
 
   $scope.adoptableStatus = { "status": { "$t": "A"} };
 
-  $scope.animalSelector = [
-        { 'option': 'dogs', 'value': 'dog' }, { 'option': 'cats', 'value': 'cat' },
-        { 'option': 'birds', 'value': 'bird' }, { 'option': 'rabbits', 'value': 'rabbit' },
-        { 'option': 'pigs', 'value': 'pigs' }, { 'option': 'farm', 'value': 'barnyard' },
-        { 'option': 'horses', 'value': 'horse' },
-        { 'option': 'reptiles', 'value': 'reptiles' }, { 'option': 'small & furry', 'value': 'smallfurry' }
-    ];
+  $scope.animalSelector = petmodel.animalTypes;
 
-  $scope.animal = 'dog';
   $scope.zipcode = null;
   $scope.showspinner = false;
 
@@ -58,9 +48,9 @@ function ($scope, $filter, $document, $timeout, petfinder, ImageArray) {
         $scope.pets = data.petfinder.pets.pet;
       }
       // use timeout because cached hits are too fast and this will wait until content is loaded
-      $timeout(function() {
+      $timeout(function () {
         $scope.showspinner = false;
-      },0);
+      }, 0);
     };
     petfinder.findPets($scope.zipcode, $scope.animal, callback.bind(this));
   };
@@ -71,5 +61,11 @@ function ($scope, $filter, $document, $timeout, petfinder, ImageArray) {
     };
     setTimeout(tooltips, 100);
   };
+
+  /* auto-load for testing*/
+  $document.ready(function () {
+    $scope.initTooltips();
+    $('.zipcode').focus();
+  });
 
 } ]);
