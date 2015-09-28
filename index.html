@@ -26,19 +26,19 @@
             <span class="sr-only">Toggle navigation</span>
             <span class="glyphicon glyphicon-menu-hamburger"></span>
           </button>
-      		<a class="navbar-brand" href="./">BF</a>
+      		<a class="navbar-brand" href="./" id="brand">BF</a>
 			  </div>
         <div class="collapse navbar-collapse" id="navbar">
       		<ul class="nav navbar-nav">
-			      <li><a href="./" aria-controls="home">Home</a></li>
+			      <li><a href="./" aria-controls="home" id="home">Home</a></li>
 
 				    <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="pets/{{animal}}"
-                  id="petDropdown" aria-haspopup="true" aria-expanded="false">Adoptable Pets<span class="caret"></span>
+                  id="petmenu" aria-haspopup="true" aria-expanded="false">Adoptable Pets<span class="caret"></span>
               </a>
               <ul class="dropdown-menu" aria-labelledby="petDropdown">
                 <li data-ng-repeat="opt in petmenu track by opt.value">
-                  <a data-ng-href="pets/{{opt.value}}">{{opt.name}}</a>
+                  <a data-ng-href="pets/{{opt.value}}" id="petmenu{{opt.name}}">{{opt.name}}</a>
                 </li>
               </ul>
       			</li>
@@ -67,19 +67,19 @@
       <p class="panel">
         <ul class="label">
 		      <li class="label">
-            <a href="./">Bob Ferrero September 2015</a>
+            <a href="./" id="footerDate">Bob Ferrero September 2015</a>
           </li>
 		      <li class="pull-right">
-            <a href="http://github.com/bfhike">
+            <a href="http://github.com/bfhike" id="footerGithub">
               <img src="images/GitHub-Mark-32px.png" alt="GitHub Pages" title="GitHub Pages"
                     height="24" width="24"/></a>
-            <a href="http://github.com/angular">
+            <a href="http://github.com/angular" id="footerAngular">
               <img src="images/AngularJS-Shield-small.png" alt="Angular.js" title="Angular.js" 
                     height="24" width="24"/></a>
-            <a href="http://github.com/jquery">
+            <a href="http://github.com/jquery" id="footerJQuery">
                 <img src="images/jquery-logo.png" alt="JQuery" title="JQuery" 
                     height="16" width="16"/></a>
-            <a href="http://github.com//twbs/bootstrap">
+            <a href="http://github.com//twbs/bootstrap" id="footerBootstrap">
                 <img src="images/bootstrap-solid.svg" alt="Bootstrap" title="Bootstrap" 
                   height="16" width="16"/></a>
           </li>

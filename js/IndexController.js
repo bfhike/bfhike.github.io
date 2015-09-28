@@ -17,6 +17,12 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
     $scope.animal = $routeParams.animal;
   });
 
+  $scope.$watch('$routeParams.animal', function () {
+    $scope.animal = $routeParams.animal;
+  });
+
+
+
   $document.ready(function () {
   });
 
