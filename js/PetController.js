@@ -62,7 +62,9 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
         $scope.showspinner = false;
       }, 0);
     };
-    petfinder.findPets($scope.location, $scope.animal, callback.bind(this));
+    if ($scope.location && $scope.animal) {
+      petfinder.findPets($scope.location, $scope.animal, callback.bind(this));
+    }
   };
 
   $scope.initTooltips = function () {
