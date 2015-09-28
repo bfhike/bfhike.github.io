@@ -6,19 +6,23 @@
                 data-ng-show="message != null">{{message}}</p>
             <form data-ng-submit="findpets()" name="searchForm">
               <div class="row form-horizontal form-group panel">
-                  <div class="col-sm-3">
-                      <input type="number" name="zipcode" data-ng-model="zipcode" pattern="\d{5}"
-                             title="Please enter a valid, 5-digit Zip code"
-                             required="required" placeholder="Enter a 5-digit Zip Code" class="form-control zipcode" />
+                  <div class="col-sm-5" >
+                      <input type="text" name="location" class="form-control location"
+                             data-ng-model="location" 
+                             pattern="(\d{5}|[,\w\s]{5,})" required="required"
+                             title="City, State or Zip code (US/Canada)"
+                             placeholder="City, State or Zip code (US/Canada)" />
                   </div>
                   <div class="col-sm-3">
-                      <select data-ng-model="animal" class="form-control" 
-                              ng-options="t.value as t.name for t in animalSelector">
+                      <select data-ng-options="t.value as t.name for t in animalSelector"
+                              data-ng-change="$location.path('pets/'+animal);" 
+                              data-ng-model="animal" class="form-control" >
                       </select>
                   </div>
                   <div class="col-sm-1">
-                      <button id="findPetsButton" data-ng-submit="findpets()" class="btn btn-info"  
-                              title="Enter a 5-digit Zip Code and press" data-ng-disabled="searchForm.zipcode.$error.pattern">
+                      <button id="findPetsButton" data-ng-submit="updateCookie();findpets()" class="btn btn-info"  
+                              title="Enter a 5-digit Zip Code and press" 
+                              data-ng-disabled="searchForm.location.$error.pattern">
                         <span class="glyphicon glyphicon-search"><span data-role="spacer"> </span>Search</span>
                         <img src="images/ajax-loader.gif" class="ng-hide" data-ng-show="showspinner"
                                     alt="searching for pets"/>

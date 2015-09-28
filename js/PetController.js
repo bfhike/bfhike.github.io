@@ -1,12 +1,26 @@
-angular.module('PetController', ['ngRoute', 'PetFinder', 'ImageArray', 'PetModel'])
+angular.module('PetController', ['ngRoute', 'ngCookies', 'PetFinder', 'ImageArray', 'PetModel'])
 .controller('PetController',
-['$scope', '$filter', '$document', '$timeout', '$route', '$routeParams', '$location', 'petfinder', 'imageArray', 'petmodel',
-function ($scope, $filter, $document, $timeout, $route, $routeParams, $location, petfinder, ImageArray, petmodel) {
+['$scope', '$filter', '$document', '$timeout', '$route', '$routeParams', '$location', '$cookies', 'petfinder', 'imageArray', 'petmodel',
+function ($scope, $filter, $document, $timeout, $route, $routeParams, $location, $cookies, petfinder, ImageArray, petmodel) {
 
   $scope.name = "PetController";
   $scope.$route = $route;
   $scope.$location = $location;
   $scope.$routeParams = $routeParams;
+  $scope.animalSelector = petmodel.animalTypes;
+
+  /* pet global variables */
+  $scope.locationCookiename = 'location';
+  $scope.location = $cookies.get($scope.locationCookiename);
+  $scope.updateCookie = function () {
+    $cookies.put($scope.locationCookiename, $scope.location);
+  };
+
+  $scope.animal = null;
+  $scope.$watch('$routeParams.animal', function () {
+    $scope.animal = $routeParams.animal;
+    $scope.findpets();
+  });
 
   $scope.message = null;
   $scope.hasMessage = $scope.message != null && $scope.message.length > 0;
@@ -32,10 +46,6 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
   };
 
   $scope.adoptableStatus = { "status": { "$t": "A"} };
-
-  $scope.animalSelector = petmodel.animalTypes;
-
-  $scope.zipcode = null;
   $scope.showspinner = false;
 
   $scope.findpets = function () {
@@ -52,7 +62,7 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
         $scope.showspinner = false;
       }, 0);
     };
-    petfinder.findPets($scope.zipcode, $scope.animal, callback.bind(this));
+    petfinder.findPets($scope.location, $scope.animal, callback.bind(this));
   };
 
   $scope.initTooltips = function () {
@@ -65,7 +75,7 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
   /* auto-load for testing*/
   $document.ready(function () {
     $scope.initTooltips();
-    $('.zipcode').focus();
+    $('.location').focus();
   });
 
 } ]);
