@@ -3,11 +3,10 @@ angular.module('PetController', ['ngRoute', 'ngCookies', 'PetFinder', 'ImageArra
 ['$scope', '$filter', '$document', '$timeout', '$route', '$routeParams', '$location', '$cookies', 'petfinder', 'imageArray', 'petmodel',
 function ($scope, $filter, $document, $timeout, $route, $routeParams, $location, $cookies, petfinder, ImageArray, petmodel) {
 
-  $scope.name = "PetController";
   $scope.$route = $route;
   $scope.$location = $location;
   $scope.$routeParams = $routeParams;
-  $scope.animalSelector = petmodel.animalTypes;
+
 
   /* pet global variables */
   $scope.locationCookiename = 'location';
@@ -16,11 +15,8 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
     $cookies.put($scope.locationCookiename, $scope.location);
   };
 
-  $scope.animal = null;
-  $scope.$watch('$routeParams.animal', function () {
-    $scope.animal = $routeParams.animal;
-    $scope.findpets();
-  });
+  $scope.animal = $routeParams.animal;
+  $scope.animalSelector = petmodel.animalTypes;
 
   $scope.message = null;
   $scope.hasMessage = $scope.message != null && $scope.message.length > 0;
@@ -48,7 +44,12 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
   $scope.adoptableStatus = { "status": { "$t": "A"} };
   $scope.showspinner = false;
 
-  $scope.findpets = function () {
+  $scope.submitAction = function () {
+    $scope.updateCookie();
+    $scope.findPets();
+  };
+
+  $scope.findPets = function () {
     if (!$scope.location || $scope.location.length == 0 || !$scope.animal || $scope.animal.length == 0) return;
 
     $scope.showspinner = true;
@@ -78,6 +79,7 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
   $document.ready(function () {
     $scope.initTooltips();
     $('.location').focus();
+    $scope.findPets();
   });
 
 } ]);

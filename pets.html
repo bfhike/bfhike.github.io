@@ -2,9 +2,11 @@
         <div class="container" data-ng-controller="PetController"> 
 
           <h3>Search for adoptable pets by City, State or Zip Code (US/Canada)</h3>
-            <p class="text-warning" data-ng-cloak data-ng-model="message" 
-                data-ng-show="message != null">{{message}}</p>
-            <form data-ng-submit="findpets()" name="searchForm">
+            <div data-ng-cloak>
+              <p class="text-warning" data-ng-model="message" 
+                  data-ng-show="message != null">{{message}}</p>
+            </div>
+            <form data-ng-submit="submitAction()" name="searchForm">
               <div class="row form-horizontal form-group panel">
                   <div class="col-sm-5" >
                       <input type="text" name="location" class="form-control location"
@@ -20,7 +22,7 @@
                       </select>
                   </div>
                   <div class="col-sm-1">
-                      <button id="findPetsButton" data-ng-submit="updateCookie();findpets()" class="btn btn-info"  
+                      <button id="findPetsButton" class="btn btn-info"  
                               title="Enter a 5-digit Zip Code and press" 
                               data-ng-disabled="searchForm.location.$error.pattern">
                         <span class="glyphicon glyphicon-search"><span data-role="spacer"> </span>Search</span>
