@@ -49,6 +49,8 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
   $scope.showspinner = false;
 
   $scope.findpets = function () {
+    if (!$scope.location || $scope.location.length == 0 || !$scope.animal || $scope.animal.length == 0) return;
+
     $scope.showspinner = true;
     var callback = function (data) {
       if (!data || !data.petfinder || !data.petfinder.pets || !data.petfinder.pets.pet) {
@@ -62,9 +64,7 @@ function ($scope, $filter, $document, $timeout, $route, $routeParams, $location,
         $scope.showspinner = false;
       }, 0);
     };
-    if ($scope.location && $scope.animal) {
-      petfinder.findPets($scope.location, $scope.animal, callback.bind(this));
-    }
+    petfinder.findPets($scope.location, $scope.animal, callback.bind(this));
   };
 
   $scope.initTooltips = function () {
