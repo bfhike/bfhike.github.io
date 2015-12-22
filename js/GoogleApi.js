@@ -46,4 +46,8 @@ angular.module('GoogleApi', [])
     reverseGeocode, reverseGeocode
   };
 
+<<<<<<< HEAD
 } ]);
+=======
+} ]);
+>>>>>>> bobferrero-local/master
