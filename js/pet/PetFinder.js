@@ -3,6 +3,11 @@ angular.module('PetFinder', ['PetCache'])
 .factory('petfinder', ['$http', 'petcache',
 function ($http, petcache) {
 
+  var constants = { test: false, url: '//us-central1-igneous-future-108923.cloudfunctions.net/pets' };
+
+  var api = {
+
+    defaults: {
       count: 100,
       format: 'json',
       offset: 0,
